@@ -18,14 +18,14 @@ struct Node {
 
 // function prototypes
 // addToHead() adds a new node with the given value to Head of list
-// arguments: head pointer, float rating, string comment
+// arguments: head pointer, float rating, const string comment
 // returns: NA
-void addToHead(Node *&head, float rating, string &comment);
+void addToHead(Node *&head, float rating, const string &comment);
 
 // addToTail() adds a new node with the given value to Tail of list
-// arguments: head pointer, float rating, string comment
+// arguments: head pointer, float rating, const string comment
 // returns: NA
-void addToTail(Node *&head, float rating, string &comment);
+void addToTail(Node *&head, float rating, const string &comment);
 
 // displayReview() display the Review
 // arguments: head pointer
@@ -37,6 +37,11 @@ void displayReview(Node *head);
 // returns: NA
 void deleteList(Node *&head);
 
+// vector<string> readCommentsFromFile() reads the comment from file reviews.txt
+// arguments: const string &filename
+// returns: NA
+vector<string> readCommentsFromFile(const string &filename);
+
 //Movie Class
 class Movie {
 private:
@@ -44,11 +49,22 @@ private:
     Node*head;
 public:
     Movie(const string& movieTitle) : title(movieTitle), head(nullptr) {}      //Constructor
-    ~Movie(){deleteList(head);}                                              //Destructor
+    ~Movie(){deleteList(head);}                                                //Destructor
     void addReview(const string &comment);    //auto random rating
     void displayReviews() const;
     string getTitle() const {return title;}
 };
+//Movie Class Implementation
+void Movie::addReview(const string &comment) {
+    float rating = static_cast<float>(rand() % 41 + 10) / 10.0; //random 1.0-5.0
+    addToHead(head, rating, comment);
+}
+
+void Movie::displayReviews() const {
+    cout << "Movie: " << title << endl;
+    displayReview(head);
+}
+
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
@@ -80,7 +96,7 @@ int main() {
     return 0;
 }
 
-void addToHead(Node *&head, float rating, string &comment){
+void addToHead(Node *&head, float rating, const string &comment){
     Node *newNode = new Node{rating, comment, head};
     head = newNode;
 }
@@ -131,3 +147,19 @@ void deleteList(Node *&head){
     }
     head = nullptr;
 }
+
+vector<string> readCommentsFromFile(const string &filename) {
+    vector<string> comments;
+    ifstream fin(filename);
+    if (!fin) {
+        cerr << "Error opening file: " << filename << endl;
+        return comments;
+    }
+    string line;
+    while (getline(fin, line)) {
+        if (!line.empty()) comments.push_back(line);
+    }
+    fin.close();
+    return comments;
+}
+
