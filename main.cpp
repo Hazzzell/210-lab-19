@@ -1,13 +1,13 @@
 // COMSC-210 | Lab 19 | Keng C Chan
 // IDE used: Visual Studio Code (VS Code)
 #include <iostream>
-#include <fstream>
+#include <iomanip>
 #include <vector>
+#include <array>
+#include <fstream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
-#
-#include <string>
-#include <iomanip>
 using namespace std;
 
 struct Node {
@@ -16,16 +16,6 @@ struct Node {
     Node *next;
 };
 
-//Movie Class
-class Movie {
-private:
-    string title;
-    Node*head;
-
-public:
-    Movie(const string& movieTitle);
-    ~Movie();
-};
 // function prototypes
 // addToHead() adds a new node with the given value to Head of list
 // arguments: head pointer, float rating, string comment
@@ -47,42 +37,46 @@ void displayReview(Node *head);
 // returns: NA
 void deleteList(Node *&head);
 
+//Movie Class
+class Movie {
+private:
+    string title;
+    Node*head;
+public:
+    Movie(const string& movieTitle) : title(movieTitle), head(nullptr) {}      //Constructor
+    ~Movie(){deleteList(head);}                                              //Destructor
+    void addReview(const string &comment);    //auto random rating
+    void displayReviews() const;
+    string getTitle() const {return title;}
+};
+
 int main() {
-    Node *head = nullptr;
-    int choice;
+    srand(static_cast<unsigned int>(time(0)));
 
-    cout << "Which linked list method should we use?\n";
-    cout << "    [1] New nodes are added at the head of the linked list\n";
-    cout << "    [2] New nodes are added at the tail of the linked list\n";
-    cout << "    Choice: ";
-    cin >> choice;
-    cin.ignore();
-
-    char again = 'y';
-    while (again == 'y' || again == 'Y'){
-        float rating;
-        string comment;
-        cout << "Enter Review Rating (0-5): ";
-        cin >> rating;
-        cin.ignore();
-        cout << "Enter Review Comments: ";
-        getline(cin, comment);
-
-        if (choice == 1){
-            addToHead(head, rating, comment);
-        }
-        else {
-            addToTail(head, rating, comment);
-        }
-
-        cout << "Enter another review? Y/N: ";
-        cin >> again;
-        cin.ignore();
+    vector<string> comments = readCommentsFromFile("reviews.txt");
+    if (comments.empty()) {
+        cout << "Error in review comments.\n";
+        return 1;
     }
-    cout << "Outputting all Reviews: \n";
-    displayReview(head);
-    
-    deleteList(head);
+    vector<Movie> movies;
+    movies.push_back(Movie("The Matrix"));
+    movies.push_back(Movie("Inception"));
+    movies.push_back(Movie("Interstellar"));
+    movies.push_back(Movie("Parasite"));
+
+    //Add at least 3 reviews per movie
+    for (auto& movie : movies) {
+        for (int i = 0; i < 3; ++i) {
+            int idx = rand() % comments.size();
+            movie.addReview(comments[idx]);
+        }
+    }
+
+    //Display
+    for (const auto& movie : movies) {
+        movie.displayReviews();
+    }
+
     return 0;
 }
 
