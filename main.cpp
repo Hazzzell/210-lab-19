@@ -4,8 +4,8 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
-
-
+#include <ctime>
+#
 #include <string>
 #include <iomanip>
 using namespace std;
@@ -16,6 +16,16 @@ struct Node {
     Node *next;
 };
 
+//Movie Class
+class Movie {
+private:
+    string title;
+    Node*head;
+
+public:
+    Movie(const string& movieTitle);
+    ~Movie();
+};
 // function prototypes
 // addToHead() adds a new node with the given value to Head of list
 // arguments: head pointer, float rating, string comment
