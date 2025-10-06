@@ -1,6 +1,11 @@
 // COMSC-210 | Lab 19 | Keng C Chan
 // IDE used: Visual Studio Code (VS Code)
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstdlib>
+
+
 #include <string>
 #include <iomanip>
 using namespace std;
