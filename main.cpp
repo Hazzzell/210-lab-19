@@ -101,7 +101,7 @@ void addToHead(Node *&head, float rating, const string &comment){
     head = newNode;
 }
 
-void addToTail(Node *&head, float rating, string &comment){
+void addToTail(Node *&head, float rating, const string &comment){
     Node *newNode = new Node{rating, comment, nullptr};
     if (!head){
         head = newNode;
@@ -121,7 +121,7 @@ void displayReview(Node *head){
     }
     Node *current = head;
 
-    int count = 0;
+    int count = 1;
     float sum = 0;
     while (current) {
         cout << "    > Review #" << count << ": "
